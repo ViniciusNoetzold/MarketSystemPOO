@@ -128,6 +128,9 @@ class Sistema:
         if not cliente:
             print("Cliente não encontrado.")
             return
+        if quantidade <= 0:
+            print("A quantidade deve ser maior que zero.")
+            return
         if quantidade > produto.quantidade:
             print("Estoque insuficiente.")
             return
@@ -138,9 +141,11 @@ class Sistema:
         self.total_vendas += valor_total
 
         venda = {
+            "produto_id": produto.id,
             "produto": produto.nome,
             "quantidade": quantidade,
             "valor": valor_total,
+            "cliente_id": cliente.id,
             "cliente": cliente.nome
         }
         self.vendas.enfileirar(venda)
@@ -172,13 +177,24 @@ class Sistema:
             self.clientes.append(item)
             print(f"Remoção do cliente {item.nome} desfeita.")
         elif operacao == "venda":
-            produto = next((p for p in self.estoque if p.nome == item["produto"]), None)
-            cliente = next((c for c in self.clientes if c.nome == item["cliente"]), None)
+            # Preferir IDs para evitar ambiguidade por nomes iguais
+            produto_id = item.get("produto_id")
+            cliente_id = item.get("cliente_id")
+            if produto_id is not None:
+                produto = next((p for p in self.estoque if p.id == produto_id), None)
+            else:
+                produto = next((p for p in self.estoque if p.nome == item["produto"]), None)
+
+            if cliente_id is not None:
+                cliente = next((c for c in self.clientes if c.id == cliente_id), None)
+            else:
+                cliente = next((c for c in self.clientes if c.nome == item["cliente"]), None)
             if produto and cliente:
                 produto.quantidade += item["quantidade"]
                 cliente.total_gasto -= item["valor"]
                 self.total_vendas -= item["valor"]
-                self.vendas.desenfileirar()
+                # Remover a última venda registrada para manter consistência com a pilha de operações
+                self.vendas.remover_ultimo()
                 print(f"Venda do produto {item['produto']} desfeita.")
         elif operacao == "atualizar_quantidade":
             produto, quantidade = item
