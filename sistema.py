@@ -183,10 +183,13 @@ class Sistema:
                     if self.vendas.itens[-1] == item:
                         self.vendas.itens.pop()
                     else:
-                        for idx in range(len(self.vendas.itens) - 1, -1, -1):
-                            if self.vendas.itens[idx] == item:
-                                self.vendas.itens.pop(idx)
-                                break
+                        # Remove a ocorrência mais recente do item na deque
+                        try:
+                            self.vendas.itens.reverse()
+                            self.vendas.itens.remove(item)
+                            self.vendas.itens.reverse()
+                        except ValueError:
+                            pass
                 print(f"Venda do produto {item['produto']} desfeita.")
         elif operacao == "atualizar_quantidade":
             produto, quantidade = item
