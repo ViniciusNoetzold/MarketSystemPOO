@@ -178,7 +178,15 @@ class Sistema:
                 produto.quantidade += item["quantidade"]
                 cliente.total_gasto -= item["valor"]
                 self.total_vendas -= item["valor"]
-                self.vendas.desenfileirar()
+                # Remove a venda correspondente da fila, priorizando a mais recente
+                if self.vendas.itens:
+                    if self.vendas.itens[-1] == item:
+                        self.vendas.itens.pop()
+                    else:
+                        for idx in range(len(self.vendas.itens) - 1, -1, -1):
+                            if self.vendas.itens[idx] == item:
+                                self.vendas.itens.pop(idx)
+                                break
                 print(f"Venda do produto {item['produto']} desfeita.")
         elif operacao == "atualizar_quantidade":
             produto, quantidade = item
