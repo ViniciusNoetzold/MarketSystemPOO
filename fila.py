@@ -1,12 +1,18 @@
+from collections import deque
+
+
 class Fila:
     def __init__(self):
-        self.itens = []
+        self.itens = deque()
 
     def enfileirar(self, item):
         self.itens.append(item)
 
     def desenfileirar(self):
-        return self.itens.pop(0) if self.itens else None
+        return self.itens.popleft() if self.itens else None
+
+    def remover_ultimo(self):
+        return self.itens.pop() if self.itens else None
 
     def esta_vazia(self):
         return len(self.itens) == 0
