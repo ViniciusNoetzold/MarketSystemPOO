@@ -1,0 +1,41 @@
+# Cache e bytecode do Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Ambientes virtuais
+.venv/
+venv/
+env/
+ENV/
+
+# Variáveis locais e credenciais
+.env
+.env.*
+!.env.example
+
+# Testes, cobertura e análise
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Builds e pacotes
+build/
+dist/
+*.egg-info/
+
+# IDEs
+.idea/
+.vscode/
+*.code-workspace
+
+# Sistema operacional e temporários
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+*.bak
+*.swp
+*~
